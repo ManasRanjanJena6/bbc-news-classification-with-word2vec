@@ -63,3 +63,38 @@ Text snippet: market analysts are predicting that the economy...
 
 Text snippet: the striker scored a hat-trick in yesterday's match...
 👉 Actual: sport, Predicted: sport
+
+---
+
+## 🚀 Live Demo
+
+You can try the live demo and test your own text predictions by visiting:  
+[**BBC News Classification App**](https://bbc-news-classification-with-word2vec.streamlit.app/)
+
+---
+
+## 📚 Installation and Usage
+
+To run this project locally, follow these steps:
+
+### 1. Clone the repository:
+
+```bash
+git clone https://github.com/ManasRanjanJena6/bbc-news-classification-with-word2vec.git
+cd bbc-news-classification-with-word2vec
+
+### 2. Set up a virtual environment (optional but recommended):
+
+```bash
+python3 -m venv venv
+source venv/bin/activate   # On Windows use `venv\Scripts\activate`
+
+### 3. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+
+### 4. Run the app:
+
+```bash
+streamlit run app.py
