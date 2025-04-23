@@ -133,12 +133,27 @@ from gensim.models import Word2Vec
 from PIL import Image
 import time
 import os
-import sys  # Import the sys module
+import sys
 
 # --- NLTK Data Path Configuration ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+# Prepend the path to give it priority
 if nltk_data_path not in nltk.data.path:
-    nltk.data.path.append(nltk_data_path)
+    nltk.data.path.insert(0, nltk_data_path)  # Insert at the beginning!
+
+# --- Check and Create NLTK Data Directory ---
+if not os.path.exists(nltk_data_path):
+    try:
+        os.makedirs(nltk_data_path)
+        st.warning(f"Created NLTK data directory at: {nltk_data_path}")
+    except Exception as e:
+        st.error(f"Failed to create NLTK data directory: {e}")
+        st.stop()
+elif not os.access(nltk_data_path, os.W_OK):
+    st.error(f"NLTK data directory is not writable: {nltk_data_path}")
+    st.stop()
+else:
+    st.info(f"NLTK data directory exists and is writable: {nltk_data_path}")
 
 # --- NLTK Downloads and Debugging ---
 def download_nltk_data(resource_name, download_message):
@@ -148,14 +163,15 @@ def download_nltk_data(resource_name, download_message):
         st.warning(download_message)
         try:
             nltk.download(resource_name, download_dir=nltk_data_path)
-        except Exception as e:  # Catch any exception during download
+        except Exception as e:
             st.error(f"Error during download of {resource_name}: {e}")
             st.stop()
         try:
             nltk.data.find(resource_name)
             st.success(f"{resource_name} downloaded successfully to: {nltk_data_path}")
         except LookupError:
-            st.error(f"Failed to find {resource_name} after download.  NLTK data path: {nltk.data.path}, CWD: {os.getcwd()}, sys.path: {sys.path}")
+            st.error(
+                f"Failed to find {resource_name} after download.  NLTK data path: {nltk.data.path}, CWD: {os.getcwd()}, sys.path: {sys.path}")
             st.stop()
 
 download_nltk_data('tokenizers/punkt', "Downloading Punkt tokenizer data...")
@@ -169,7 +185,7 @@ st.sidebar.subheader("NLTK Data Path:")
 st.sidebar.code(str(nltk.data.path))
 st.sidebar.subheader("Current Working Directory:")
 st.sidebar.code(os.getcwd())
-st.sidebar.subheader("sys.path:")  # Add sys.path to the output
+st.sidebar.subheader("sys.path:")
 st.sidebar.code(str(sys.path))
 
 # --- Page Configuration ---
@@ -269,3 +285,4 @@ if st.button("✨ Classify"):
 # --- Footer ---
 st.markdown("---")
 st.caption("Developed with Streamlit and Python")
+
