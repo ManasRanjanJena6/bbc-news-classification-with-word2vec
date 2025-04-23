@@ -46,7 +46,7 @@ st.markdown(
 with st.sidebar:
     # Load and display the BBC logo (or a placeholder)
     try:
-        bbc_logo = Image.open(r"\inputs\BBC_World_News_2022.svg.png")  # Ensure you have this image
+        bbc_logo = Image.open(r"BBC_World_News_2022.svg.png")  # Ensure you have this image
         st.image(bbc_logo, width=200)
     except FileNotFoundError:
         st.image(np.zeros((100, 100, 3)), width=200) # Display blank if logo is missing
