@@ -75,6 +75,31 @@ try:
 except nltk.downloader.DownloadError:
     nltk.download('punkt')
 
+import nltk
+
+# --- NLTK Downloads ---
+try:
+    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('corpora/stopwords')
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('omw-1.4') # You might need this for WordNet on newer NLTK versions
+
+# ... rest of your code ...
+
+def preprocess_text(text):
+    lemmatizer = WordNetLemmatizer()
+    text = re.sub(r'\W', ' ', text.lower())
+    tokens = nltk.word_tokenize(text)
+    tokens = [lemmatizer.lemmatize(word)
+              for word in tokens
+              if word not in stopwords.words('english') and word not in string.punctuation]
+    return tokens
+
+# ... rest of your code ...
 
 
 # --- Load Models ---
@@ -86,15 +111,15 @@ def load_models():
 
 model, w2v_model = load_models()
 
-# --- Preprocessing and Vectorization ---
-def preprocess_text(text):
-    lemmatizer = WordNetLemmatizer()
-    text = re.sub(r'\W', ' ', text.lower())
-    tokens = nltk.word_tokenize(text)
-    tokens = [lemmatizer.lemmatize(word)
-              for word in tokens
-              if word not in stopwords.words('english') and word not in string.punctuation]
-    return tokens
+# # --- Preprocessing and Vectorization ---
+# def preprocess_text(text):
+#     lemmatizer = WordNetLemmatizer()
+#     text = re.sub(r'\W', ' ', text.lower())
+#     tokens = nltk.word_tokenize(text)
+#     tokens = [lemmatizer.lemmatize(word)
+#               for word in tokens
+#               if word not in stopwords.words('english') and word not in string.punctuation]
+#     return tokens
 
 
 def vectorize_text(tokens):
