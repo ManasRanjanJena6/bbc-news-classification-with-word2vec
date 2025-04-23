@@ -121,7 +121,6 @@
 # st.markdown("---")
 # st.caption("Developed with Streamlit and Python")
 
-
 import streamlit as st
 import numpy as np
 import nltk
@@ -133,17 +132,33 @@ from nltk.stem import WordNetLemmatizer
 from gensim.models import Word2Vec
 from PIL import Image  # To handle images
 import time  # For potential timing adjustments
+import os
+
+# --- NLTK Data Path Configuration ---
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+if nltk_data_path not in nltk.data.path:
+    nltk.data.path.append(nltk_data_path)
 
 # --- NLTK Downloads ---
 try:
     nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt', download_dir=nltk_data_path)
+    st.warning("Downloading Punkt tokenizer data...")
+
+try:
     nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords', download_dir=nltk_data_path)
+    st.warning("Downloading stopwords data...")
+
+try:
     nltk.data.find('corpora/wordnet')
 except LookupError:
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-    nltk.download('omw-1.4') # You might need this for WordNet on newer NLTK versions
+    nltk.download('wordnet', download_dir=nltk_data_path)
+    st.warning("Downloading wordnet data...")
+    nltk.download('omw-1.4', download_dir=nltk_data_path)
+    st.warning("Downloading omw-1.4 data...")
 
 # --- Page Configuration ---
 st.set_page_config(
