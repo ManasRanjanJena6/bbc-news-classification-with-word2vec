@@ -134,12 +134,13 @@ from PIL import Image
 import time
 import os
 import sys
+import zipfile  # Import the zipfile module
 
 # --- NLTK Data Path Configuration ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
 
 # --- Forcefully Set NLTK Data Path ---
-nltk.data.path = [nltk_data_path]  # Override the entire path!
+nltk.data.path = [nltk_data_path]
 st.warning(f"Setting NLTK data path to: {nltk_data_path}")
 
 # --- Check and Create NLTK Data Directory ---
@@ -156,29 +157,40 @@ elif not os.access(nltk_data_path, os.W_OK):
 else:
     st.info(f"NLTK data directory exists and is writable: {nltk_data_path}")
 
-# --- NLTK Downloads and Debugging ---
-def download_nltk_data(resource_name, download_message):
+# --- Explicit Download and Extraction ---
+def download_and_extract_nltk_data(resource_name, download_message):
+    try:
+        nltk.data.find(resource_name)
+        st.info(f"{resource_name} already exists.")
+    except LookupError:
+        st.warning(download_message)
+        download_path = nltk.download(resource_name, download_dir=nltk_data_path)  # Get the download path
+
+        if download_path:
+            # Determine if it's a zip file and extract
+            if download_path.endswith('.zip'):
+                try:
+                    with zipfile.ZipFile(download_path, 'r') as zip_ref:
+                        zip_ref.extractall(nltk_data_path)
+                    st.success(f"{resource_name} downloaded and extracted to: {nltk_data_path}")
+                except Exception as e:
+                    st.error(f"Error extracting {resource_name}: {e}")
+                    st.stop()
+            else:
+                st.success(f"{resource_name} downloaded to: {download_path}")
+        else:
+            st.error(f"Failed to download {resource_name}.")
+            st.stop()
     try:
         nltk.data.find(resource_name)
     except LookupError:
-        st.warning(download_message)
-        try:
-            nltk.download(resource_name, download_dir=nltk_data_path)
-        except Exception as e:
-            st.error(f"Error during download of {resource_name}: {e}")
-            st.stop()
-        try:
-            nltk.data.find(resource_name)
-            st.success(f"{resource_name} downloaded successfully to: {nltk_data_path}")
-        except LookupError:
-            st.error(
-                f"Failed to find {resource_name} after download.  NLTK data path: {nltk.data.path}, CWD: {os.getcwd()}, sys.path: {sys.path}")
-            st.stop()
-
-download_nltk_data('tokenizers/punkt', "Downloading Punkt tokenizer data...")
-download_nltk_data('corpora/stopwords', "Downloading stopwords data...")
-download_nltk_data('corpora/wordnet', "Downloading wordnet data...")
-download_nltk_data('omw-1.4', "Downloading omw-1.4 data...")
+        st.error(
+            f"Failed to find {resource_name} after download and extraction.  NLTK data path: {nltk.data.path}, CWD: {os.getcwd()}, sys.path: {sys.path}")
+        st.stop()
+download_and_extract_nltk_data('tokenizers/punkt', "Downloading Punkt tokenizer data...")
+download_and_extract_nltk_data('corpora/stopwords', "Downloading stopwords data...")
+download_and_extract_nltk_data('corpora/wordnet', "Downloading wordnet data...")
+download_and_extract_nltk_data('omw-1.4', "Downloading omw-1.4 data...")
 
 # --- Debugging Output ---
 st.sidebar.markdown("---")
