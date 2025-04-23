@@ -77,15 +77,15 @@ def load_models():
 
 model, w2v_model = load_models()
 
-# # --- Preprocessing and Vectorization ---
-# def preprocess_text(text):
-#     lemmatizer = WordNetLemmatizer()
-#     text = re.sub(r'\W', ' ', text.lower())
-#     tokens = nltk.word_tokenize(text)
-#     tokens = [lemmatizer.lemmatize(word)
-#               for word in tokens
-#               if word not in stopwords.words('english') and word not in string.punctuation]
-#     return tokens
+# --- Preprocessing and Vectorization ---
+def preprocess_text(text):
+    lemmatizer = WordNetLemmatizer()
+    text = re.sub(r'\W', ' ', text.lower())
+    tokens = nltk.word_tokenize(text)
+    tokens = [lemmatizer.lemmatize(word)
+              for word in tokens
+              if word not in stopwords.words('english') and word not in string.punctuation]
+    return tokens
 
 
 def vectorize_text(tokens):
