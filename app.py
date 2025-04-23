@@ -134,6 +134,37 @@ from PIL import Image
 import time
 import os
 
+# --- NLTK Data Path Configuration ---
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+if nltk_data_path not in nltk.data.path:
+    nltk.data.path.append(nltk_data_path)
+
+# --- NLTK Downloads and Debugging ---
+def download_nltk_data(resource_name, download_message):
+    try:
+        nltk.data.find(resource_name)
+    except LookupError:
+        st.warning(download_message)
+        nltk.download(resource_name, download_dir=nltk_data_path)
+        try:
+            nltk.data.find(resource_name)
+            st.success(f"{resource_name} downloaded successfully to: {nltk_data_path}")  # Explicit success message
+        except LookupError:
+            st.error(f"Failed to download {resource_name} after attempting download.")
+            st.stop()  # Stop the app if download fails
+
+download_nltk_data('tokenizers/punkt', "Downloading Punkt tokenizer data...")
+download_nltk_data('corpora/stopwords', "Downloading stopwords data...")
+download_nltk_data('corpora/wordnet', "Downloading wordnet data...")
+download_nltk_data('omw-1.4', "Downloading omw-1.4 data...")
+
+# --- Debugging Output ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("NLTK Data Path:")
+st.sidebar.code(str(nltk.data.path))  # Print the NLTK data path in the sidebar
+st.sidebar.subheader("Current Working Directory:")
+st.sidebar.code(os.getcwd())
+
 # --- Page Configuration ---
 st.set_page_config(
     page_title="BBC News Classifier",
@@ -141,32 +172,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# --- NLTK Data Path Configuration ---
-nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
-if nltk_data_path not in nltk.data.path:
-    nltk.data.path.append(nltk_data_path)
-
-# --- NLTK Downloads ---
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt', download_dir=nltk_data_path)
-    st.warning("Downloading Punkt tokenizer data...")
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords', download_dir=nltk_data_path)
-    st.warning("Downloading stopwords data...")
-
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    nltk.download('wordnet', download_dir=nltk_data_path)
-    st.warning("Downloading wordnet data...")
-    nltk.download('omw-1.4', download_dir=nltk_data_path)
-    st.warning("Downloading omw-1.4 data...")
 
 # --- Styling ---
 st.markdown(
@@ -196,7 +201,7 @@ st.markdown(
 with st.sidebar:
     # Load and display the BBC logo
     try:
-        bbc_logo = Image.open("BBC_World_News_2022.svg.png")  # Ensure you have this image in the same directory
+        bbc_logo = Image.open("BBC_World_News_2022.svg.png")
         st.image(bbc_logo, width=200)
     except FileNotFoundError:
         st.image(np.zeros((100, 100, 3)), width=200)
