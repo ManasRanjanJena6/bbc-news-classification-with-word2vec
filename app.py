@@ -70,13 +70,6 @@ with st.sidebar:
 
 import nltk
 
-try:
-    nltk.data.find('tokenizers/punkt')
-except nltk.downloader.DownloadError:
-    nltk.download('punkt')
-
-import nltk
-
 # --- NLTK Downloads ---
 try:
     nltk.data.find('tokenizers/punkt')
@@ -91,6 +84,9 @@ except LookupError:
 # ... rest of your code ...
 
 def preprocess_text(text):
+    from nltk.corpus import stopwords # Import here to ensure it's available after download
+    from nltk.stem import WordNetLemmatizer # Import here for the same reason
+
     lemmatizer = WordNetLemmatizer()
     text = re.sub(r'\W', ' ', text.lower())
     tokens = nltk.word_tokenize(text)
@@ -98,9 +94,6 @@ def preprocess_text(text):
               for word in tokens
               if word not in stopwords.words('english') and word not in string.punctuation]
     return tokens
-
-# ... rest of your code ...
-
 
 # --- Load Models ---
 @st.cache_resource
