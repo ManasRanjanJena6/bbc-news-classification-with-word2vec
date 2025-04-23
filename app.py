@@ -130,9 +130,17 @@ import joblib
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from gensim.models import Word2Vec
-from PIL import Image  # To handle images
-import time  # For potential timing adjustments
+from PIL import Image
+import time
 import os
+
+# --- Page Configuration ---
+st.set_page_config(
+    page_title="BBC News Classifier",
+    page_icon="📰",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # --- NLTK Data Path Configuration ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
@@ -160,14 +168,6 @@ except LookupError:
     nltk.download('omw-1.4', download_dir=nltk_data_path)
     st.warning("Downloading omw-1.4 data...")
 
-# --- Page Configuration ---
-st.set_page_config(
-    page_title="BBC News Classifier",
-    page_icon="📰",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 # --- Styling ---
 st.markdown(
     """
@@ -194,13 +194,13 @@ st.markdown(
 
 # --- Sidebar ---
 with st.sidebar:
-    # Load and display the BBC logo (or a placeholder)
+    # Load and display the BBC logo
     try:
-        bbc_logo = Image.open(r"BBC_World_News_2022.svg.png")  # Ensure you have this image
+        bbc_logo = Image.open("BBC_World_News_2022.svg.png")  # Ensure you have this image in the same directory
         st.image(bbc_logo, width=200)
     except FileNotFoundError:
-        st.image(np.zeros((100, 100, 3)), width=200) # Display blank if logo is missing
-        st.warning("BBC News Logo not found. Please add 'bbc_news_logo.png' to the directory.")
+        st.image(np.zeros((100, 100, 3)), width=200)
+        st.warning("BBC News Logo not found. Please add 'BBC_World_News_2022.svg.png' to the directory.")
 
     st.title("BBC News Classifier")
     st.markdown("This app classifies news articles into the following categories:")
@@ -251,12 +251,10 @@ if st.button("✨ Classify"):
         prediction = model.predict(vector)
         st.markdown("<p class='big-font'><b>Predicted Category:</b></p>", unsafe_allow_html=True)
         st.markdown(f"<p class='big-font'>{prediction[0]}</p>", unsafe_allow_html=True)
-
-        st.balloons()  # Launch the balloons!
-        # Optionally, you can add a short delay if you want the balloons to appear after the text
+        st.balloons()
         time.sleep(1)
-
 
 # --- Footer ---
 st.markdown("---")
 st.caption("Developed with Streamlit and Python")
+
