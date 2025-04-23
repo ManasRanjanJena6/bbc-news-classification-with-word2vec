@@ -137,9 +137,10 @@ import sys
 
 # --- NLTK Data Path Configuration ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
-# Prepend the path to give it priority
-if nltk_data_path not in nltk.data.path:
-    nltk.data.path.insert(0, nltk_data_path)  # Insert at the beginning!
+
+# --- Forcefully Set NLTK Data Path ---
+nltk.data.path = [nltk_data_path]  # Override the entire path!
+st.warning(f"Setting NLTK data path to: {nltk_data_path}")
 
 # --- Check and Create NLTK Data Directory ---
 if not os.path.exists(nltk_data_path):
@@ -285,4 +286,5 @@ if st.button("✨ Classify"):
 # --- Footer ---
 st.markdown("---")
 st.caption("Developed with Streamlit and Python")
+
 
