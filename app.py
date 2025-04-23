@@ -58,15 +58,30 @@ with st.sidebar:
     st.markdown("---")
     st.info("Please enter the full text of a news article in the box. The classifier will then predict its category.")
 
-# --- NLTK Downloads ---
+# # --- NLTK Downloads ---
+# try:
+#     nltk.data.find('punkt')
+#     nltk.data.find('stopwords')
+#     nltk.data.find('wordnet')
+# except LookupError:
+#     nltk.download('punkt')
+#     nltk.download('stopwords')
+#     nltk.download('wordnet')
+
+import nltk
+
+# Set a custom path for NLTK data
+nltk.data.path.append('nltk_data')
+
 try:
     nltk.data.find('punkt')
     nltk.data.find('stopwords')
     nltk.data.find('wordnet')
 except LookupError:
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
+    nltk.download('punkt', download_dir='nltk_data')
+    nltk.download('stopwords', download_dir='nltk_data')
+    nltk.download('wordnet', download_dir='nltk_data')
+
 
 
 # --- Load Models ---
