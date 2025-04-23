@@ -57,7 +57,7 @@ The goal is to classify news articles into categories like **business, entertain
 
 - **Overall Sample Accuracy**: ~76%
 
-```text
+
 Text snippet: market analysts are predicting that the economy...
 👉 Actual: business, Predicted: business
 
@@ -79,22 +79,19 @@ To run this project locally, follow these steps:
 
 ### 1. Clone the repository:
 
-```bash
+
 git clone https://github.com/ManasRanjanJena6/bbc-news-classification-with-word2vec.git
 cd bbc-news-classification-with-word2vec
 
 ### 2. Set up a virtual environment (optional but recommended):
 
-```bash
 python3 -m venv venv
 source venv/bin/activate   # On Windows use `venv\Scripts\activate`
 
 ### 3. Install the required dependencies:
 
-```bash
 pip install -r requirements.txt
 
 ### 4. Run the app:
 
-```bash
 streamlit run app.py
