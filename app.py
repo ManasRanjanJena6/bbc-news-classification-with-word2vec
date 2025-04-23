@@ -133,6 +133,7 @@ from gensim.models import Word2Vec
 from PIL import Image
 import time
 import os
+import sys  # Import the sys module
 
 # --- NLTK Data Path Configuration ---
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
@@ -145,13 +146,17 @@ def download_nltk_data(resource_name, download_message):
         nltk.data.find(resource_name)
     except LookupError:
         st.warning(download_message)
-        nltk.download(resource_name, download_dir=nltk_data_path)
+        try:
+            nltk.download(resource_name, download_dir=nltk_data_path)
+        except Exception as e:  # Catch any exception during download
+            st.error(f"Error during download of {resource_name}: {e}")
+            st.stop()
         try:
             nltk.data.find(resource_name)
-            st.success(f"{resource_name} downloaded successfully to: {nltk_data_path}")  # Explicit success message
+            st.success(f"{resource_name} downloaded successfully to: {nltk_data_path}")
         except LookupError:
-            st.error(f"Failed to download {resource_name} after attempting download.")
-            st.stop()  # Stop the app if download fails
+            st.error(f"Failed to find {resource_name} after download.  NLTK data path: {nltk.data.path}, CWD: {os.getcwd()}, sys.path: {sys.path}")
+            st.stop()
 
 download_nltk_data('tokenizers/punkt', "Downloading Punkt tokenizer data...")
 download_nltk_data('corpora/stopwords', "Downloading stopwords data...")
@@ -161,9 +166,11 @@ download_nltk_data('omw-1.4', "Downloading omw-1.4 data...")
 # --- Debugging Output ---
 st.sidebar.markdown("---")
 st.sidebar.subheader("NLTK Data Path:")
-st.sidebar.code(str(nltk.data.path))  # Print the NLTK data path in the sidebar
+st.sidebar.code(str(nltk.data.path))
 st.sidebar.subheader("Current Working Directory:")
 st.sidebar.code(os.getcwd())
+st.sidebar.subheader("sys.path:")  # Add sys.path to the output
+st.sidebar.code(str(sys.path))
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -224,7 +231,7 @@ model, w2v_model = load_models()
 
 # --- Preprocessing and Vectorization ---
 def preprocess_text(text):
-    lemmatizer = WordNetLemmatizer()
+    lemmatizer = WordNetNetLemmatizer()
     text = re.sub(r'\W', ' ', text.lower())
     tokens = nltk.word_tokenize(text)
     tokens = [lemmatizer.lemmatize(word)
@@ -262,4 +269,3 @@ if st.button("✨ Classify"):
 # --- Footer ---
 st.markdown("---")
 st.caption("Developed with Streamlit and Python")
-
