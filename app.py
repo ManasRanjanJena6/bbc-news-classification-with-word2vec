@@ -70,17 +70,10 @@ with st.sidebar:
 
 import nltk
 
-# Set a custom path for NLTK data
-nltk.data.path.append('nltk_data')
-
 try:
-    nltk.data.find('punkt')
-    nltk.data.find('stopwords')
-    nltk.data.find('wordnet')
-except LookupError:
-    nltk.download('punkt', download_dir='nltk_data')
-    nltk.download('stopwords', download_dir='nltk_data')
-    nltk.download('wordnet', download_dir='nltk_data')
+    nltk.data.find('tokenizers/punkt')
+except nltk.downloader.DownloadError:
+    nltk.download('punkt')
 
 
 
@@ -102,6 +95,7 @@ def preprocess_text(text):
               for word in tokens
               if word not in stopwords.words('english') and word not in string.punctuation]
     return tokens
+
 
 def vectorize_text(tokens):
     vec = np.zeros(100)
