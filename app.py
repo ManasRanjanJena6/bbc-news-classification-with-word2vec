@@ -299,4 +299,3 @@ if st.button("✨ Classify"):
 st.markdown("---")
 st.caption("Developed with Streamlit and Python")
 
-
