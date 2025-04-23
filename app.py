@@ -58,42 +58,15 @@ with st.sidebar:
     st.markdown("---")
     st.info("Please enter the full text of a news article in the box. The classifier will then predict its category.")
 
-# # --- NLTK Downloads ---
-# try:
-#     nltk.data.find('punkt')
-#     nltk.data.find('stopwords')
-#     nltk.data.find('wordnet')
-# except LookupError:
-#     nltk.download('punkt')
-#     nltk.download('stopwords')
-#     nltk.download('wordnet')
-
-import nltk
-
 # --- NLTK Downloads ---
 try:
-    nltk.data.find('tokenizers/punkt')
-    nltk.data.find('corpora/stopwords')
-    nltk.data.find('corpora/wordnet')
+    nltk.data.find('punkt')
+    nltk.data.find('stopwords')
+    nltk.data.find('wordnet')
 except LookupError:
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('wordnet')
-    nltk.download('omw-1.4') # You might need this for WordNet on newer NLTK versions
-
-# ... rest of your code ...
-
-def preprocess_text(text):
-    from nltk.corpus import stopwords # Import here to ensure it's available after download
-    from nltk.stem import WordNetLemmatizer # Import here for the same reason
-
-    lemmatizer = WordNetLemmatizer()
-    text = re.sub(r'\W', ' ', text.lower())
-    tokens = nltk.word_tokenize(text)
-    tokens = [lemmatizer.lemmatize(word)
-              for word in tokens
-              if word not in stopwords.words('english') and word not in string.punctuation]
-    return tokens
 
 # --- Load Models ---
 @st.cache_resource
