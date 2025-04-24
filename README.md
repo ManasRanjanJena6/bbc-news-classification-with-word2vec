@@ -81,6 +81,7 @@ To run this project locally, follow these steps:
 
 
 git clone https://github.com/ManasRanjanJena6/bbc-news-classification-with-word2vec.git
+
 cd bbc-news-classification-with-word2vec
 
 ### 2. Set up a virtual environment (optional but recommended):
